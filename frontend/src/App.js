@@ -14,7 +14,7 @@ const App = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-  socket.current = io("http://localhost:5000");
+  socket.current = io();
 
   socket.current.on("connect", () => {
     console.log("Socket connected");
@@ -27,7 +27,7 @@ const App = () => {
     console.log("Online Users:", users);
   });
 
-  axios.get("http://localhost:5000/api/users").then((res) => setUsers(res.data));
+  axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users`).then((res) => setUsers(res.data));
 
   return () => {
     socket.current?.disconnect();
@@ -48,7 +48,7 @@ useEffect(() => {
     if (!email.trim()) return;
 
     axios
-      .post("http://localhost:5000/api/users/login", { email })
+      .post(`${process.env.REACT_APP_BACKEND_URL}/api/users/login`, { email })
       .then((res) => {
        setUser(res.data);
 sessionStorage.setItem("chat-user", JSON.stringify(res.data));

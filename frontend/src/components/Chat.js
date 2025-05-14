@@ -38,7 +38,7 @@ const Chat = ({ user, users, socket, handleLogout }) => {
     if (selectedUser) {
       axios
         .get(
-          `http://localhost:5000/api/users/messages/${user._id}/${selectedUser._id}`
+          `${process.env.REACT_APP_BACKEND_URL}/api/users/messages/${user._id}/${selectedUser._id}`
         )
         .then((res) => setMessages(res.data));
     }
@@ -57,7 +57,7 @@ const Chat = ({ user, users, socket, handleLogout }) => {
       text: newMsg,
     };
 
-    await axios.post("http://localhost:5000/api/users/messages", msg);
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/users/messages`, msg);
     socket.current.emit("sendMessage", msg);
     setMessages((prev) => [...prev, { ...msg, createdAt: new Date() }]);
     setNewMsg("");
