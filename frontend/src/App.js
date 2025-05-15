@@ -23,7 +23,7 @@ const App = () => {
       socket.current.emit("addUser", user._id);
     }
 
-    axios.get(`h${process.env.REACT_APP_BACKEND_URL}api/users`).then((res) => setUsers(res.data));
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}api/users`).then((res) => setUsers(res.data));
 
     return () => {
       socket.current?.disconnect();
