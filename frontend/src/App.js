@@ -6,60 +6,46 @@ import Chat from "./components/Chat";
 const App = () => {
   const socket = useRef();
   const [user, setUser] = useState(() => {
-  const storedUser = sessionStorage.getItem("chat-user");
-  return storedUser ? JSON.parse(storedUser) : null;
-});
-
+    const storedUser = localStorage.getItem("chat-user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
   const [users, setUsers] = useState([]);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-  socket.current = io();
+    socket.current = io("http://localhost:5000");
 
-  socket.current.on("connect", () => {
-    console.log("Socket connected");
+    socket.current.on("connect", () => {
+      console.log("Socket connected");
+    });
+
     if (user) {
       socket.current.emit("addUser", user._id);
     }
-  });
 
-  socket.current.on("getUsers", (users) => {
-    console.log("Online Users:", users);
-  });
+    axios.get("http://localhost:5000/api/users").then((res) => setUsers(res.data));
 
-  axios.get(`${process.env.REACT_APP_BACKEND_URL}api/users`).then((res) => setUsers(res.data));
-
-  return () => {
-    socket.current?.disconnect();
-  };
-}, []);
-
-
-
-useEffect(() => {
-  if (user && socket.current?.connected) {
-    socket.current.emit("addUser", user._id);
-  }
-}, [user]);
-
-
+    return () => {
+      socket.current?.disconnect();
+    };
+  }, [user]);
 
   const handleLogin = () => {
     if (!email.trim()) return;
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}api/users/login`, { email })
+      .post("http://localhost:5000/api/users/login", { email })
       .then((res) => {
-       setUser(res.data);
-sessionStorage.setItem("chat-user", JSON.stringify(res.data));
-
+        setUser(res.data);
+        localStorage.setItem("chat-user", JSON.stringify(res.data)); // Use localStorage here
+        socket.current.emit("addUser", res.data._id);
       })
       .catch((err) => console.log(err));
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("chat-user"); 
-    window.location.reload(); 
+    localStorage.removeItem("chat-user"); // Clear the session from localStorage
+    window.location.reload(); // Refresh the page
   };
 
   return (
