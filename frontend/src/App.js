@@ -23,7 +23,7 @@ const App = () => {
       socket.current.emit("addUser", user._id);
     }
 
-    axios.get(`${process.envREACT_APP_BACKEND_URL}api/users`).then((res) => setUsers(res.data));
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}api/users`).then((res) => setUsers(res.data));
 
     return () => {
       socket.current?.disconnect();
@@ -34,7 +34,7 @@ const App = () => {
     if (!email.trim()) return;
 
     axios
-      .post(`${process.envREACT_APP_BACKEND_URL}api/users/login`, { email })
+      .post(`${process.env.REACT_APP_BACKEND_URL}api/users/login`, { email })
       .then((res) => {
         setUser(res.data);
         localStorage.setItem("chat-user", JSON.stringify(res.data)); 
