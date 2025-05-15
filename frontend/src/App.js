@@ -37,15 +37,15 @@ const App = () => {
       .post("http://localhost:5000/api/users/login", { email })
       .then((res) => {
         setUser(res.data);
-        localStorage.setItem("chat-user", JSON.stringify(res.data)); // Use localStorage here
+        localStorage.setItem("chat-user", JSON.stringify(res.data)); 
         socket.current.emit("addUser", res.data._id);
       })
       .catch((err) => console.log(err));
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("chat-user"); // Clear the session from localStorage
-    window.location.reload(); // Refresh the page
+    localStorage.removeItem("chat-user"); 
+    window.location.reload(); 
   };
 
   return (
