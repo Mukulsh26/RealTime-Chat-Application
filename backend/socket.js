@@ -23,13 +23,25 @@ module.exports = (server) => {
     });
 
     socket.on("typing", ({ to }) => {
-      const toSockets = onlineUsers[to];
-      if (toSockets) {
-        for (let sockId of toSockets) {
-          io.to(sockId).emit("typing", { from: socket.userId });
-        }
-      }
-    });
+  const toSockets = onlineUsers[to];
+  if (toSockets) {
+    for (let sockId of toSockets) {
+      io.to(sockId).emit("typing", { from: socket.userId });
+    }
+  }
+});
+
+socket.on("stopTyping", ({ to }) => {
+  const toSockets = onlineUsers[to];
+  if (toSockets) {
+    for (let sockId of toSockets) {
+      io.to(sockId).emit("stopTyping", { from: socket.userId });
+    }
+  }
+});
+
+
+
 
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
       const toSockets = onlineUsers[receiverId];
