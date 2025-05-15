@@ -13,7 +13,7 @@ const App = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    socket.current = io(`${process.envREACT_APP_BACKEND_URL}`);
+    socket.current = io(`${process.env.REACT_APP_BACKEND_URL}`);
 
     socket.current.on("connect", () => {
       console.log("Socket connected");
